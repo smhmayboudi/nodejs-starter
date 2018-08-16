@@ -1,0 +1,21 @@
+{
+  "comments": false,
+  "env": {
+    "development": {},
+    "production": {}
+  },
+  "ignore": ["dist", "flow-coverage", "node_modules"],
+  "sourceMaps": "inline",
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ],
+    "flow",
+    "stage-3"
+  ]
+}

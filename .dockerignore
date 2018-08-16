@@ -1,0 +1,11 @@
+.DS_Store
+.dockerignore
+.git
+.vscode
+Dockerfile
+README.md
+dist/
+docker-compose.yml
+flow-coverage/
+flow-typed/
+node_modules/

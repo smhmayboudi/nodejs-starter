@@ -1,0 +1,110 @@
+[ignore]
+.DS_Store
+.babelrc
+.dockerignore
+.env.development
+.env.production
+.eslint.flowtype.js
+.eslint.js
+.eslintignore
+.eslintrc
+.flowconfig
+.flowcoveragerc
+.git
+.gitignore
+.lintstagedrc
+.prettierignore
+.prettierrc
+.vscode
+.watchmanconfig
+Dockerfile
+README.md
+dist
+docker-compose.yml
+flow-coverage
+flow-typed
+node_modules
+package-lock.json
+package.json
+
+[include]
+
+[libs]
+flow-typed
+
+[lints]
+all=error
+# deprecated-type
+# deprecated-call-syntax
+# inexact-spread
+# sketchy-null
+# sketchy-null-bool
+# sketchy-null-number
+# sketchy-null-string
+# sketchy-null-mixed
+# sketchy-number
+# sketchy-number-and
+# untyped-type-import
+unclear-type=off
+# unsafe-getters-setters
+# untyped-import
+# nonstrict-import
+# unnecessary-invariant
+# unnecessary-optional-chain
+
+[options]
+# all=false
+# emoji=false
+# esproposal.class_instance_fields=enable
+# esproposal.class_static_fields=enable
+# esproposal.decorators=warn
+# esproposal.export_star_as=warn
+# esproposal.optional_chaining=warn
+# esproposal.nullish_coalescing=warn
+# experimental.const_params=false
+# include_warnings=false
+# log.file=/tmp/flow/<escaped root path>.log
+# max_header_tokens=10
+# module.file_ext=.js
+# module.ignore_non_literal_requires=false
+# module.name_mapper
+# module.name_mapper.extension
+# module.system=node
+# module.system.node.resolve_dirname=node_modules
+# module.use_strict=false
+# munge_underscores=false
+# no_flowlib=false
+# server.max_workers=4
+# sharedmemory.dirs=/dev/shm
+# sharedmemory.dirs=/tmp
+# sharedmemory.minimum_available=536870912
+# sharedmemory.dep_table_pow=17
+# sharedmemory.hash_table_pow=19
+# sharedmemory.log_level=0
+# strip_root=false
+# suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe
+# suppress_type
+# temp_dir=/tmp/flow
+# traces=0
+
+[strict]
+deprecated-type
+deprecated-call-syntax
+inexact-spread
+sketchy-null
+sketchy-null-bool
+sketchy-null-number
+sketchy-null-string
+sketchy-null-mixed
+sketchy-number
+sketchy-number-and
+untyped-type-import
+unclear-type
+unsafe-getters-setters
+untyped-import
+nonstrict-import
+# unnecessary-invariant
+unnecessary-optional-chain
+
+[version]
+^0.78.0

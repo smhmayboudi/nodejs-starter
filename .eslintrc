@@ -1,0 +1,16 @@
+{
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:flowtype/recommended",
+    "plugin:prettier/recommended",
+    "prettier",
+    "prettier/flowtype",
+    ".eslint.js",
+    ".eslint.flowtype.js"
+  ],
+  "root": true
+}

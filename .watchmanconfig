@@ -1,0 +1,11 @@
+[
+  "trigger",
+  "./src",
+  {
+    "name": "watchman",
+    "append_files": false,
+    "expression": ["anyof", ["match", "*.js", "wholename"]],
+    "stdin": ["name", "exists", "new", "size", "mode"],
+    "command": ["npm", "run", "docker"]
+  }
+]

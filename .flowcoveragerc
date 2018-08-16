@@ -1,0 +1,13 @@
+{
+  "includeGlob": [
+    "src/**/*.js"
+  ],
+  "threshold": 90,
+  "type": [
+    "badge",
+    "html",
+    "json",
+    "text"
+  ],
+  "strictCoverage": true
+}
