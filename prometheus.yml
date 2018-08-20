@@ -19,3 +19,10 @@ scrape_configs:
       labels:
         service: 'my-node-exporter'
         group: 'development'
+  - job_name: development
+    static_configs:
+    - targets:
+      - development:3002
+      labels:
+        service: 'my-development'
+        group: 'development'

@@ -64,7 +64,7 @@ module.exports = class Elasticsearch extends Transport {
         // }
         // suggestCompression: false
       },
-      index: null,
+      // index: null,
       indexPrefix: "logs",
       indexSuffixPattern: "YYYY.MM.DD",
       level: "info",
@@ -74,10 +74,10 @@ module.exports = class Elasticsearch extends Transport {
         info: "info",
         silly: "debug",
         verbose: "debug",
-        warn: "warning"
+        warn: "warn"
       },
       transformer,
-      type: "_doc"
+      type: "_logs"
     };
 
     this.options = _.defaultsDeep(options, this.defaults);
@@ -144,16 +144,16 @@ module.exports = class Elasticsearch extends Transport {
   ): string {
     this.name = "elasticsearch";
 
-    let indexName: ?string = options.index;
+    let { index }: { index?: string } = options;
 
     /* eslint-disable-next-line no-undefined */
-    if (indexName === undefined || indexName === null) {
+    if (index === undefined || index === null) {
       const { indexPrefix }: { indexPrefix: string } = options;
 
       const now: moment$Moment = moment();
       const dateString: string = now.format(options.indexSuffixPattern);
 
-      indexName = `${indexPrefix}${
+      index = `${indexPrefix}${
         /* eslint-disable-next-line no-undefined */
         indexInterfix === undefined || indexInterfix === null
           ? ""
@@ -161,6 +161,6 @@ module.exports = class Elasticsearch extends Transport {
       }-${dateString}`;
     }
 
-    return indexName;
+    return index;
   }
 };

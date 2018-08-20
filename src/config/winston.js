@@ -1,5 +1,6 @@
 /* @flow */
 
+/* $FlowFixMe */
 import { Logger, createLogger, format, transports } from "winston";
 import Elasticsearch from "../lib/winston-elasticsearch";
 import Sentry from "../lib/winston-sentry";
@@ -25,13 +26,13 @@ const levelsMap: WinstonLevelsMap = {
 
 if (env.LOG_CONSOLE) {
   const formatHandler: (
-    info: { [string]: any },
+    info: WinstonTransformableInfo,
     options: { [string]: any }
-  ) => { [string]: any } = (
-    info: { [string]: any },
+  ) => WinstonTransformableInfo = (
+    info: WinstonTransformableInfo,
     /* eslint-disable-next-line no-unused-vars */
     options: { [string]: any }
-  ): { [string]: any } => {
+  ): WinstonTransformableInfo => {
     info.timestamp = new Date().toISOString();
     info.level = levelsMap[info.level].toUpperCase();
     /* eslint-disable-next-line camelcase */
@@ -41,12 +42,9 @@ if (env.LOG_CONSOLE) {
       ..._.omit(info, ["level", "message", "server_name", "timestamp"])
     };
 
-    info.meta = JSON.stringify(meta);
-    if (info.meta === "{}") {
-      info.meta = "";
-    } else {
-      info.meta = ` \n${info.meta}`;
-    }
+    const metaStringify: string = JSON.stringify(meta);
+
+    info.meta = metaStringify === "{}" ? "" : ` \n${metaStringify}`;
 
     return info;
   };
@@ -54,9 +52,9 @@ if (env.LOG_CONSOLE) {
   const printfHandler: (info: { [string]: any }) => string = (info: {
     [string]: any
   }): string =>
-    `[${info.timestamp}] ${info.level}: ${
-      info.server_name
-    } (FILE_PATH:LINE_NUMBER in Moddule.Function) ${info.message}${info.meta}`;
+    `[${info.timestamp}] ${info.level}: ${info.server_name} ${info.message}${
+      info.meta
+    }`;
 
   logger.add(
     new Console({
@@ -92,20 +90,5 @@ if (env.LOG_SENTRY) {
     })
   );
 }
-
-logger.emitErrs = false;
-// /* eslint-disable-next-line handle-callback-err */
-// const errorHandler: (err: Error) => void = (err: Error): void => {
-// };
-// logger.on("error", errorHandler);
-
-// create a stream object with a 'write' function that will be used by `morgan`
-logger.stream = {
-  /* eslint-disable-next-line no-unused-vars */
-  write(message: string, encoding: string) {
-    // use the 'info' log level so the output will be picked up by both transports (file and console)
-    logger.info(message);
-  }
-};
 
 export default logger;

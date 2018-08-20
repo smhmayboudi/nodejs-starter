@@ -26,7 +26,7 @@ const BulkWriter: (
     // bulk to be flushed
     this.bulk = [];
     this.running = false;
-    this.timer = false;
+    this.timer = null;
     debug("created", this);
   };
 
@@ -78,7 +78,6 @@ BulkWriter.prototype.tick = function tick() {
 };
 
 BulkWriter.prototype.flush = function flush(): Promise<any> {
-  // write bulk to elasticsearch
   const that: BulkWriter = this;
 
   /* eslint-disable-next-line no-magic-numbers */
@@ -131,7 +130,7 @@ BulkWriter.prototype.flush = function flush(): Promise<any> {
         index: { error: any }
       }) => void = (item: { index: { error: any } }): void => {
         if (item.index && item.index.error) {
-          // eslint-disable-next-line no-console
+          /* eslint-disable-next-line no-console */
           console.error("Elasticsearch index error", item.index);
         }
       };
@@ -148,10 +147,8 @@ BulkWriter.prototype.flush = function flush(): Promise<any> {
   };
 
   const bulkCatchHandler: (err: Error) => void = (err: Error): void => {
-    // prevent [DEP0018] DeprecationWarning
-    // rollback this.bulk array
     that.bulk = bulk.concat(that.bulk);
-    // eslint-disable-next-line no-console
+    /* eslint-disable-next-line no-console */
     console.error(err);
     debug("error occurred", err);
     that.stop();
@@ -200,14 +197,14 @@ BulkWriter.prototype.checkEsConnection = function checkEsConnection(): Promise<
   });
 
   return new Promise(
-    (resolve: (value?: any) => void, reject: (reason?: any) => void) => {
+    (resolve: (value?: any) => void, reject: (reason?: any) => void): void => {
       const attemptHandler: (currentAttempt: number) => void = (
         currentAttempt: number
       ): void => {
         debug("checking for connection", currentAttempt);
+        /* eslint-disable-next-line no-unused-vars */
         const pingHandler: (res: any) => void = (res: any): void => {
           that.esConnection = true;
-          // Ensure mapping template is existing if desired
           if (that.options.ensureMappingTemplate) {
             that.ensureMappingTemplate(resolve, reject);
           } else {
@@ -227,7 +224,7 @@ BulkWriter.prototype.checkEsConnection = function checkEsConnection(): Promise<
           reject(new Error("Cannot connect"));
         };
 
-        that.client.ping().then(pingHandler, pingCatchHandler);
+        that.client.ping({}).then(pingHandler, pingCatchHandler);
       };
 
       operation.attempt(attemptHandler);
@@ -242,20 +239,25 @@ BulkWriter.prototype.ensureMappingTemplate = function ensureMappingTemplate(
   const that: BulkWriter = this;
   let { mappingTemplate }: { mappingTemplate: any } = that.options;
 
-  if (mappingTemplate === null || typeof mappingTemplate === "undefined") {
+  /* eslint-disable-next-line no-undefined */
+  if (mappingTemplate === null || typeof mappingTemplate === undefined) {
+    /* eslint-disable-next-line no-sync */
     const rawdata: string = fs.readFileSync(
       path.join(__dirname, "winston-elasticsearch-index-template-mapping.json"),
       "utf8"
     );
 
     mappingTemplate = JSON.parse(rawdata);
+    mappingTemplate = {
+      ...mappingTemplate,
+      /* eslint-disable-next-line camelcase */
+      index_patterns: `${that.options.indexPrefix}-${
+        that.options.indexSuffixPattern
+      }`
+    };
   }
   const tmplCheckMessage: { name: string } = {
-    name: `template_${
-      typeof that.options.indexPrefix === "function"
-        ? that.options.indexPrefix()
-        : that.options.indexPrefix
-    }`
+    name: `template_${that.options.indexPrefix}`
   };
 
   const getTemplateHandler: (res: any) => void = (res: any): void => {
@@ -268,14 +270,10 @@ BulkWriter.prototype.ensureMappingTemplate = function ensureMappingTemplate(
 
     /* eslint-disable-next-line no-undefined */
     if (err.status !== undefined && err.status === errorStatus) {
-      const tmplMessage: { name: string } = {
+      const tmplMessage: { body: string, create: boolean, name: string } = {
         body: mappingTemplate,
         create: true,
-        name: `template_${
-          typeof that.options.indexPrefix === "function"
-            ? that.options.indexPrefix()
-            : that.options.indexPrefix
-        }`
+        name: `template_${that.options.indexPrefix}`
       };
 
       const putTemplateHandler: (res2: any) => void = (res2: any): void => {

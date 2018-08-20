@@ -18,7 +18,7 @@ module.exports = class Sentry extends Transport {
         info: "info",
         silly: "debug",
         verbose: "debug",
-        warn: "warning"
+        warn: "warn"
       },
       ravenOptions: {
         // allowDuplicates: false,
@@ -103,7 +103,8 @@ module.exports = class Sentry extends Transport {
   }
 
   log(info: WinstonInfo, callback: () => void): void {
-    let { level, message }: { level: string, message: string } = info;
+    let { level }: { level: string } = info;
+    const { message }: { message: string } = info;
     let meta: { [string]: any } = {
       ..._.omit(info, ["level", "message", "server_name", "timestamp"])
     };
@@ -160,14 +161,10 @@ module.exports = class Sentry extends Transport {
     try {
       if (level === "error") {
         if (meta instanceof Error) {
-          if (message === "") {
-            message = meta;
-          } else {
-            meta.message = `${message}. cause: ${meta.message}`;
-            message = meta;
-          }
+          meta.message =
+            message === "" ? "" : `${message}. cause: ${meta.message}`;
+          Raven.captureException(meta, extra, ravenHandler);
         }
-        Raven.captureException(message, extra, ravenHandler);
       } else {
         Raven.captureMessage(message, extra, ravenHandler);
       }

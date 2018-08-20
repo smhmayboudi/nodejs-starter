@@ -30,6 +30,7 @@ const newLocal1: (
   res: http$ServerResponse,
   next: express$NextFunction
 ): void => {
+  /* $FlowFixMe */
   res.locals.startEpoch = Date.now();
   next();
 };
@@ -47,11 +48,14 @@ const newLocal2: (
   next: express$NextFunction
 ): void => {
   const timeoutHandler: () => void = (): void => {
+    /* $FlowFixMe */
     res.json({ message: "Hello World!" });
     next();
   };
 
-  setTimeout(timeoutHandler, Math.round(Math.random() * 200));
+  const timeout: number = 200;
+
+  setTimeout(timeoutHandler, Math.round(Math.random() * timeout));
 };
 
 app.get("/", newLocal2);
@@ -79,13 +83,15 @@ const newLocal4: (
   res: http$ServerResponse,
   next: express$NextFunction
 ): void => {
+  const zero: number = 0;
   const paymentMethod: string =
-    Math.round(Math.random()) === 0 ? "stripe" : "paypal";
+    Math.round(Math.random()) === zero ? "stripe" : "paypal";
 
   checkoutsTotal.inc({
     /* eslint-disable-next-line camelcase */
     payment_method: paymentMethod
   });
+  /* $FlowFixMe */
   res.json({ status: "ok" });
   next();
 };
@@ -96,6 +102,7 @@ const newLocal5: (
   req: http$IncomingMessage,
   res: http$ServerResponse
 ) => void = (req: http$IncomingMessage, res: http$ServerResponse): void => {
+  /* $FlowFixMe */
   res.set("Content-Type", Prometheus.register.contentType);
   res.end(Prometheus.register.metrics());
 };
@@ -114,7 +121,7 @@ const newLocal6: (
   next: express$NextFunction
 ): void => {
   res.statusCode = 500;
-  // Do not expose your error in production
+  /* $FlowFixMe */
   res.json({ error: err.message });
   next();
 };
@@ -131,9 +138,11 @@ const newLocal7: (
   res: http$ServerResponse,
   next: express$NextFunction
 ): void => {
+  /* $FlowFixMe */
   const responseTimeInMs: number = Date.now() - res.locals.startEpoch;
 
   httpRequestDurationMicroseconds
+    /* $FlowFixMe */
     .labels(req.method, req.route.path, res.statusCode)
     .observe(responseTimeInMs);
   next();
@@ -145,16 +154,19 @@ app.use(newLocal7);
 const sigtermHandler: () => void = (): void => {
   clearInterval(metricsInterval);
   const closeHandler: (err: Error) => void = (err: Error): void => {
-    let code: number = 0;
-
     if (err) {
       logger.error(err);
-      code = 1;
+
+      const code: number = 1;
+
+      /* eslint-disable-next-line no-process-exit */
+      process.exit(code);
+    } else {
+      const code: number = 0;
+
       /* eslint-disable-next-line no-process-exit */
       process.exit(code);
     }
-    /* eslint-disable-next-line no-process-exit */
-    process.exit(code);
   };
 
   server.close(closeHandler);

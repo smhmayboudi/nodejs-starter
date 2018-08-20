@@ -1,7 +1,8 @@
 /* @flow */
 
 /* eslint-disable-next-line no-unused-vars */
-import { env, kubernetesProbs, winston as logger } from "./config";
+import * as kubernetesProbs from "./config/kubernetesProbs";
+import logger from "./config/winston";
 
 const doHomework: (
   subject: string,

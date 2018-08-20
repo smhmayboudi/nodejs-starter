@@ -12,14 +12,17 @@ declare type RavenInstrumentationOptions = {
   tryCatch?: boolean
 };
 
-declare type RavenLogLevel =
-  | "critical"
-  | "error"
-  | "warning"
-  | "info"
-  | "debug"
-  | "warn"
-  | "log";
+const LogLevelRaven = {
+  critical: "critical",
+  debug: "debug",
+  error: "error",
+  info: "info",
+  log: "log",
+  warn: "warn",
+  warning: "warning"
+};
+
+declare type RavenLogLevel = $Keys<typeof LogLevelRaven>;
 
 declare type RavenOptions = {
   allowDuplicates?: boolean,

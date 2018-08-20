@@ -5,7 +5,6 @@
     "production": {}
   },
   "ignore": ["dist", "flow-coverage", "node_modules"],
-  "sourceMaps": "inline",
   "presets": [
     [
       "env",
@@ -17,5 +16,6 @@
     ],
     "flow",
     "stage-3"
-  ]
+  ],
+  "sourceMaps": "inline"
 }

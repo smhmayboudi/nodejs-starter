@@ -107,4 +107,4 @@ nonstrict-import
 unnecessary-optional-chain
 
 [version]
-^0.78.0
+^0.79.1

@@ -1,13 +1,21 @@
 /* @flow */
 
-declare type ElasticsearchLogLevel =
-  | "debug"
-  | "error"
-  | "info"
-  | "trace"
-  | "warning";
+const LogLevel = {
+  debug: "debug",
+  error: "error",
+  info: "info",
+  trace: "trace",
+  warning: "warning"
+};
 
-declare type ElasticsearchLogType = "console" | "stdio";
+declare type ElasticsearchLogLevel = $Keys<typeof LogLevel>;
+
+const LogType = {
+  console: "console",
+  stdio: "stdio",
+};
+
+declare type ElasticsearchLogType = $Keys<typeof LogType>;
 
 declare type ElasticsearchOptions = {
   apiVersion?: string,

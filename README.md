@@ -66,7 +66,7 @@ This configuration should be applied to vscode user settings.
   "flow.useNPMPackagedFlow": true,
   "javascript.updateImportsOnFileMove.enabled": "always",
   "javascript.validate.enable": false,
-  "prettier.disableLanguages": ["js"]
+  "prettier.disableLanguages": ["javascript"]
 }
 ```
 
